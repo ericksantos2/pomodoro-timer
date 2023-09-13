@@ -45,11 +45,11 @@ export function TimerConfig({
           <GrFormClose />
         </span>
         <div>
-          <label htmlFor='config__tempo__curto'>Tempo curto:</label>
+          <label htmlFor='config__tempo__curto'>Descanso:</label>
           <input type='number' min='0' max='99' id='config__tempo__curto' value={tempoCurto} onChange={handleChange(setTempoCurto)} />
         </div>
         <div>
-          <label htmlFor='config__tempo__longo'>Tempo longo:</label>
+          <label htmlFor='config__tempo__longo'>Foco:</label>
           <input type='number' min='0' max='99' id='config__tempo__longo' value={tempoLongo} onChange={handleChange(setTempoLongo)} />
         </div>
         <button>Salvar</button>
