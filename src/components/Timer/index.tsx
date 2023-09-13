@@ -15,13 +15,13 @@ let estadoAtual: 'foco' | 'descanso' = 'foco';
 
 export default function TimerComponent() {
   const [config, setConfig] = useState(configJson);
-  const [segundosFaltando, setSegundosFaltando] = useState(config.foco);
+  const [tempoFaltando, setTempoFaltando] = useState(config.foco * 1000);
   const [estaPausado, setEstaPausado] = useState(true);
   const [configOpen, setConfigOpen] = useState(false);
 
   function togglePause() {
     estaPausado
-      ? segundosFaltando > 0 && setEstaPausado(false)
+      ? Math.floor(tempoFaltando) > 0 && setEstaPausado(false)
       : setEstaPausado(true);
   }
 
@@ -29,10 +29,10 @@ export default function TimerComponent() {
     setTimeout(() => {
       togglePause();
       if (estadoAtual === 'foco') {
-        setSegundosFaltando(config.descanso);
+        setTempoFaltando(config.descanso * 1000);
         estadoAtual = 'descanso';
       } else if (estadoAtual === 'descanso') {
-        setSegundosFaltando(config.foco);
+        setTempoFaltando(config.foco * 1000);
         estadoAtual = 'foco';
       }
     }, 1000);
@@ -41,9 +41,10 @@ export default function TimerComponent() {
   }
 
   function segundosParaHoras(tempo: number) {
-    const horas = Math.floor(tempo / 3600);
-    const minutos = Math.floor((tempo % 3600) / 60) + (horas * 60);
-    const segundos = (tempo % 3600) % 60;
+    const novoTempo = Math.floor(tempo / 1000);
+    const horas = Math.floor(novoTempo / 3600);
+    const minutos = Math.floor((novoTempo % 3600) / 60) + (horas * 60);
+    const segundos = (novoTempo % 3600) % 60;
     return `${minutos < 10 ? '0' : ''}${minutos}:${
       segundos < 10 ? '0' : ''
     }${segundos}`;
@@ -53,30 +54,32 @@ export default function TimerComponent() {
     setEstaPausado(true);
     estadoAtual = botao;
     botao === 'foco'
-      ? setSegundosFaltando(config.foco)
-      : setSegundosFaltando(config.descanso);
+      ? setTempoFaltando(config.foco * 1000)
+      : setTempoFaltando(config.descanso * 1000);
   };
 
   useEffect(() => {
-    if (segundosFaltando === 0 && !estaPausado) {
-      terminaTimer();
+    if (Math.floor(tempoFaltando / 1000) <= 0 && !estaPausado) {
+      return terminaTimer();
     }
+    const tempoInicial = new Date();
     const interval = setInterval(() => {
+      const tempoSubtracao = new Date().getTime() - tempoInicial.getTime();
       !estaPausado &&
-        segundosFaltando > 0 &&
-        setSegundosFaltando(segundosFaltando - 1);
-    }, 1000);
+        Math.floor(tempoFaltando / 1000) > 0 &&
+        setTempoFaltando(tempoFaltando - tempoSubtracao);
+    }, 500);
     return () => {
       interval && clearInterval(interval);
     };
-  }, [segundosFaltando, estaPausado]);
+  }, [tempoFaltando, estaPausado]);
 
   useEffect(() => {
-    document.title = `${segundosParaHoras(segundosFaltando)} - ${estadoAtual === 'descanso' ? 'Descanso' : 'Foco'} | Pomodoro`;
-  }, [segundosFaltando]);
+    document.title = `${segundosParaHoras(tempoFaltando)} - ${estadoAtual === 'descanso' ? 'Descanso' : 'Foco'} | Pomodoro`;
+  }, [tempoFaltando]);
 
   useEffect(() => {
-    setSegundosFaltando(config[estadoAtual]);
+    setTempoFaltando(config[estadoAtual] * 1000);
   }, [config])
 
   return (
@@ -93,7 +96,7 @@ export default function TimerComponent() {
           <button onClick={handleDuracao('foco')} style={{textDecoration: estadoAtual === 'descanso' ? 'none' : 'underline'}}>Foco</button>
         </li>
       </TimerDuracao>
-      <TimerTempo>{segundosParaHoras(segundosFaltando)}</TimerTempo>
+      <TimerTempo>{segundosParaHoras(tempoFaltando)}</TimerTempo>
       <TimerBotao onClick={togglePause} type='submit'>
         {estaPausado ? 'Iniciar' : 'Pausar'}
       </TimerBotao>
