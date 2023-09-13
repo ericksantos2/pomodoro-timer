@@ -13,7 +13,6 @@ export const TimerConfigBackground = styled.div`
 
 export const TimerConfigForm = styled.form`
   align-items: center;
-  aspect-ratio: 3 / 4;
   background-color: #fff;
   border-radius: 1.5rem;
   box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.075);
@@ -22,6 +21,7 @@ export const TimerConfigForm = styled.form`
   flex-direction: column;
   gap: 1rem;
   justify-content: center;
+  min-width: 240px;
   padding: 2rem;
   position: relative;
   width: 20vw;
@@ -47,11 +47,12 @@ export const TimerConfigForm = styled.form`
       border-radius: 10px;
       font-family: var(--font-family);
       height: 1rem;
+      min-width: 75px;
       padding: 0.3rem 0.6rem;
-      width: 5vw;
+      width: 6.25vw;
     }
   }
-
+  
   > button {
     background-color: transparent;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -59,10 +60,17 @@ export const TimerConfigForm = styled.form`
     font-family: var(--font-family);
     font-size: 16px;
     margin-top: 5px;
+    min-width: 120px;
     width: 10vw;
 
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  @media screen and (min-width: 0px) and (max-width: 767px) {
+    > div > input {
+      text-align: center;
     }
   }
 `;
