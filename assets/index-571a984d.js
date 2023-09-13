@@ -60,7 +60,7 @@ Error generating stack: `+l.message+`
 
   @media screen and (min-width: 0px) and (max-width: 767px) {
     height: 80vw;
-    max-height: 450px;
+    max-height: 90vh;
     max-width: 450px;
     width: 80vw;
   }
