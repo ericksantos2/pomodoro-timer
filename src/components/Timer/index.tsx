@@ -9,6 +9,7 @@ import {
 import configJson from '../../jsons/config.json';
 import { LuSettings2 } from 'react-icons/lu';
 import { TimerConfig } from '../TimerConfig';
+import pomodoroEnd from '/assets/pomodoro-end.mp3';
 
 let estadoAtual: 'foco' | 'descanso' = 'foco';
 
@@ -35,7 +36,7 @@ export default function TimerComponent() {
         estadoAtual = 'foco';
       }
     }, 1000);
-    const audio = new Audio('/assets/pomodoro-end.mp3');
+    const audio = new Audio(pomodoroEnd);
     audio.play();
   }
 
